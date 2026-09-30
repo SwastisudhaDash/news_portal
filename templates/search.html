@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Search — NewsHub{% endblock %}
+{% block content %}
+<div class="page-title"><span class="badge">SEARCH</span><h1>Search News</h1></div>
+<form class="big-search" action="{% url 'search' %}"><input name="q" value="{{ query }}" placeholder="Search articles..."><button>Search</button></form>
+{% if query %}<p class="results">Results for <strong>"{{ query }}"</strong></p>{% endif %}
+<section class="news-grid">
+{% for article in articles %}
+<article class="card">
+{% if article.image %}<img src="{{ article.image.url }}" alt="{{ article.title }}">{% else %}<div class="thumb-placeholder">NEWS</div>{% endif %}
+<div class="card-body"><span class="category">{{ article.category.name }}</span><h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3><p>{{ article.summary|truncatechars:140 }}</p></div>
+</article>
+{% empty %}{% if query %}<p>No matching articles found.</p>{% endif %}{% endfor %}
+</section>
+{% endblock %}

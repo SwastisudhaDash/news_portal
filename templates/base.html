@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="icon" type="image/jpeg" href="{% static 'favicon.jpg' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NewsHub{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<header class="site-header">
+    <div class="topbar">
+        <div class="container topbar-inner">
+            <span>🗓 {{ today|default:"Latest News • India" }}</span>
+            <span>Independent News Portal</span>
+        </div>
+    </div>
+    <div class="container nav">
+        <a class="brand" href="{% url 'home' %}">News<span>Hub</span></a>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            {% for category in categories %}
+                <a href="{% url 'category_news' category.slug %}">{{ category.name }}</a>
+            {% endfor %}
+        </nav>
+        <form class="search" action="{% url 'search' %}">
+            <input name="q" placeholder="Search news..." value="{{ request.GET.q|default:'' }}">
+            <button>⌕</button>
+        </form>
+    </div>
+</header>
+
+<main class="container">
+{% block content %}{% endblock %}
+</main>
+
+<footer>
+    <div class="container footer-grid">
+        <div><div class="brand">News<span>Hub</span></div><p>News, explained simply.</p></div>
+        <div><h4>Sections</h4><p>National · Technology · Sports · Business</p></div>
+        <div><h4>Project</h4><p>Built by Swastisudha Dash.</p></div>
+    </div>
+    <div class="copyright">© 2026 NewsHub.</div>
+</footer>
+</body>
+</html>

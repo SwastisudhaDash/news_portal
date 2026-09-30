@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }} — NewsHub{% endblock %}
+{% block content %}
+<article class="article">
+    <div class="article-meta"><span class="badge">{{ article.category.name }}</span> · {{ article.created_at|date:"d M Y, h:i A" }} · {{ article.views }} views</div>
+    <h1>{{ article.title }}</h1>
+    <p class="lead">{{ article.summary }}</p>
+    <p class="author">By <strong>{{ article.author }}</strong></p>
+    {% if article.image %}<img class="article-image" src="{{ article.image.url }}" alt="{{ article.title }}">{% endif %}
+    <div class="content">{{ article.content|linebreaks }}</div>
+</article>
+
+<section class="comments">
+    <h2>Comments</h2>
+    {% for comment in article.comments.all %}
+    <div class="comment"><b>{{ comment.name }}</b><small>{{ comment.created_at|timesince }} ago</small><p>{{ comment.message }}</p></div>
+    {% empty %}<p>No comments yet. Be the first.</p>{% endfor %}
+    <h3>Leave a comment</h3>
+    <form method="post" class="comment-form">{% csrf_token %}{{ form.as_p }}<button class="button">Post Comment</button></form>
+</section>
+
+<div class="section-head"><h2>Related News</h2></div>
+<section class="news-grid">
+{% for item in related %}
+<article class="card">
+    {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.title }}">{% else %}<div class="thumb-placeholder">NEWS</div>{% endif %}
+    <div class="card-body"><span class="category">{{ item.category.name }}</span><h3><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></h3></div>
+</article>
+{% endfor %}
+</section>
+{% endblock %}

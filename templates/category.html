@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }} News — NewsHub{% endblock %}
+{% block content %}
+<div class="page-title"><span class="badge">SECTION</span><h1>{{ category.name }} News</h1><p>Latest stories from {{ category.name }}.</p></div>
+<section class="news-grid">
+{% for article in articles %}
+<article class="card">
+{% if article.image %}<img src="{{ article.image.url }}" alt="{{ article.title }}">{% else %}<div class="thumb-placeholder">NEWS</div>{% endif %}
+<div class="card-body"><span class="category">{{ article.category.name }}</span><h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3><p>{{ article.summary|truncatechars:120 }}</p><small>{{ article.created_at|timesince }} ago</small></div>
+</article>
+{% empty %}<p>No news in this category yet.</p>{% endfor %}
+</section>
+{% endblock %}

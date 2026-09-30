@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}NewsHub — Latest News{% endblock %}
+{% block content %}
+{% if breaking %}
+<div class="breaking"><b>BREAKING</b><div>{% for item in breaking %}<a href="{{ item.get_absolute_url }}">{{ item.title }}</a>{% if not forloop.last %} · {% endif %}{% endfor %}</div></div>
+{% endif %}
+
+<section class="hero">
+    {% if featured %}
+    <div class="hero-image">
+        {% if featured.image %}<img src="{{ featured.image.url }}" alt="{{ featured.title }}">{% else %}<div class="placeholder">NEWS</div>{% endif %}
+    </div>
+    <div class="hero-copy">
+        <span class="badge">{{ featured.category.name }}</span>
+        <h1><a href="{{ featured.get_absolute_url }}">{{ featured.title }}</a></h1>
+        <p>{{ featured.summary }}</p>
+        <small>By {{ featured.author }} · {{ featured.created_at|date:"d M Y, h:i A" }}</small>
+    </div>
+    {% else %}
+    <div class="empty-hero"><h1>Welcome to NewsHub</h1><p>Create your first featured article from the Django Admin.</p></div>
+    {% endif %}
+</section>
+
+<div class="section-head"><h2>Latest News</h2><a href="{% url 'search' %}">View all →</a></div>
+<section class="news-grid">
+{% for article in latest %}
+<article class="card">
+    {% if article.image %}<img src="{{ article.image.url }}" alt="{{ article.title }}">{% else %}<div class="thumb-placeholder">NEWS</div>{% endif %}
+    <div class="card-body">
+        <span class="category">{{ article.category.name }}</span>
+        <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+        <p>{{ article.summary|truncatechars:120 }}</p>
+        <small>{{ article.created_at|timesince }} ago · {{ article.views }} views</small>
+    </div>
+</article>
+{% empty %}<p class="empty">No published articles yet. Add articles in <a href="/admin/">Admin</a>.</p>{% endfor %}
+</section>
+
+<div class="section-head"><h2>Trending</h2></div>
+<section class="trending">
+{% for article in trending %}
+<a href="{{ article.get_absolute_url }}"><span>{{ forloop.counter }}</span><div><b>{{ article.title }}</b><small>{{ article.views }} views</small></div></a>
+{% endfor %}
+</section>
+{% endblock %}
